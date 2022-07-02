@@ -38,12 +38,12 @@ install_from_host_home() {
             rsync -av ${host_home}/${dir_name}/ . || die "Can't rsync ${dir_name}"
         )
     done
+    for file_name in .cdpprc .localhistrc; do
+        cp ${host_home}/${file_name} ~/${file_name}
+    done
     echo "source ~/bin/bashrc-common # Added by $scriptId" >> ~/.bashrc
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
-
-    [[ -f .local/bin/cdpp/setup.sh ]] && ( cd ~/.local/bin/cdpp && ./setup.sh )
-    [[ -f .local/bin/localhist/setup.sh ]] && ( cd ~/.local/bin/localhist && ./setup.sh )
 
 }
 
