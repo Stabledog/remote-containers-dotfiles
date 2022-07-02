@@ -7,8 +7,17 @@
 #       "mounts": [ "source=${localEnv:HOME},target=/host_home,type=bind,readonly" ]
 #
 
+
+cout() {
+    sed 's%^%[remote-containers-dotfiles/install.sh]:%'
+}
+
+cerr() {
+    sed 's%^%[remote-containers-dotfiles/install.sh]:%' >&2
+}
+
 die() {
-    echo "ERROR: $*" >&2
+    echo "ERROR: $*" | cerr
     exit 1
 }
 
@@ -40,11 +49,12 @@ install_from_host_home() {
 
 main() {
     [[ -d /host_home ]] && {
-        install_from_host_home "$@"
+        install_from_host_home "$@" | cout
     }
 }
 
 [[ -z $sourceMe ]] &&  {
-    echo "remote-containers-dotfiles/install.sh startup: args[$*]"
+
+    cout "remote-containers-dotfiles/install.sh startup: args[$*]"
     main "$@"
 }
