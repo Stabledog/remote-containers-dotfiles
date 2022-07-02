@@ -49,6 +49,7 @@ install_from_host_home() {
     echo "source ~/bin/bashrc-common # Added by $scriptId" >> ~/.bashrc
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
+    [[ -e ~/projects ]] || mkdir ~/projects
 
 }
 
