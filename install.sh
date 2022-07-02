@@ -16,7 +16,11 @@ install_from_host_home() {
     # Assuming there's a /host_home share which gives us access to all the host's dotfiles:
     local host_home=/host_home
     cd ~ || die "Can't cd to ~"
-    for dir_name in bin .local/bin/cdpp .local/bin/localhost; do
+    # We also might want to do maintenance on remote-containers-dotfiles from the host's copy:
+    [[ -d $host_home/remote-containers-dotfiles ]] && {
+        ( cd ~/remote-containers-dotfiles && git remote add host_home ${host_home}/remote-containers-dotfiles && git fetch host_home )
+    }
+    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .ssh .vim; do
         (
             [[ -d $dir_name ]] || {
                 mkdir -p $dir_name || die "Can't create ~/${dir_name}"
@@ -25,9 +29,13 @@ install_from_host_home() {
             rsync -av ${host_home}/${dir_name}/ . || die "Can't rsync ${dir_name}"
         )
     done
-    [[ -d ~/bin ]] || {
-        mkdir ~/bin  || die "Can't create ~/bin"
-    }
+    echo "source ~/bin/bashrc-common # Added by $scriptId" >> ~/.bashrc
+    ln -sf bin/inputrc .inputrc
+    ln -sf my-home/gitconfig .gitconfig
+
+    [[ -f .local/bin/cdpp/setup.sh ]] && .local/bin/cdpp/setup.sh
+    [[ -f .local/bin/localhist/setup.sh ]] && .local/bin/localhist/setup.sh
+
 }
 
 main() {
