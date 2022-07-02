@@ -49,12 +49,12 @@ install_from_host_home() {
 
 main() {
     [[ -d /host_home ]] && {
-        install_from_host_home "$@" | cout
+        install_from_host_home "$@"
     }
 }
 
 [[ -z $sourceMe ]] &&  {
 
-    cout "remote-containers-dotfiles/install.sh startup: args[$*]"
-    main "$@"
+    echo "remote-containers-dotfiles/install.sh startup: args[$*]" | cout
+    main "$@" | cout
 }
