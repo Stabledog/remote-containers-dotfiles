@@ -1,0 +1,16 @@
+{
+  "name": "devcontainer-fixup",
+  "version": "1.0.0",
+  "description": "Fixes a devcontainer.json file to support remote-containers-dotfiles",
+  "main": "devcontainer-fix.js",
+  "author": "Les Matheson",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^18.0.0",
+    "jsonc-simple-parser": "^2.2.1",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "ts-node": "^10.8.2"
+  }
+}
