@@ -3,8 +3,13 @@
 # Preferred approach is to have the HOME host environment share readonly with the container as /host_home
 # Then install_from_host_home() can copy and filter as needed.
 
-#  HOWTO: specify /host_home share in devcontainer.json:
+#  SETUP:
+#    - specify /host_home share in devcontainer.json:
 #       "mounts": [ "source=${localEnv:HOME},target=/host_home,type=bind,readonly" ]
+#    - User's settings.json needs these values:
+#       "remote.containers.dotfiles.installCommand": "~/remote-containers-dotfiles/install.sh",
+#       "remote.containers.dotfiles.repository": "https://github.com/Stabledog/remote-containers-dotfiles.git",
+#       "remote.containers.dotfiles.targetPath": "~/remote-containers-dotfiles",
 #
 
 
