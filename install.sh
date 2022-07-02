@@ -42,8 +42,8 @@ install_from_host_home() {
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
 
-    [[ -f .local/bin/cdpp/setup.sh ]] && .local/bin/cdpp/setup.sh
-    [[ -f .local/bin/localhist/setup.sh ]] && .local/bin/localhist/setup.sh
+    [[ -f .local/bin/cdpp/setup.sh ]] && ( cd ~/.local/bin/cdpp && ./setup.sh )
+    [[ -f .local/bin/localhist/setup.sh ]] && ( cd ~/.local/bin/localhist && ./setup.sh )
 
 }
 
