@@ -5,6 +5,9 @@
   "main": "devcontainer-fix.js",
   "author": "Les Matheson",
   "license": "MIT",
+  "scripts": {
+     "fixup": "ts-node src/devcontainer-fixup.ts"
+  },
   "dependencies": {
     "@types/node": "^18.0.0",
     "jsonc-simple-parser": "^2.2.1",
