@@ -40,6 +40,7 @@ install_from_host_home() {
                 mkdir -p $dir_name || die "Can't create ~/${dir_name}"
             }
             cd $dir_name || die "Can't cd to ~/${dir_name}"
+            chmod u+g *
             rsync -av ${host_home}/${dir_name}/ . || die "Can't rsync ${dir_name}"
         )
     done
