@@ -34,7 +34,7 @@ install_from_host_home() {
     [[ -d $host_home/remote-containers-dotfiles ]] && {
         ( cd ~/remote-containers-dotfiles && git remote add host_home ${host_home}/remote-containers-dotfiles && git fetch host_home )
     }
-    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .ssh .vim; do
+    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .ssh .vim bb-cert; do
         (
             [[ -d $dir_name ]] || {
                 mkdir -p $dir_name || die "Can't create ~/${dir_name}"
