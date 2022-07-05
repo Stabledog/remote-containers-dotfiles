@@ -54,6 +54,7 @@ install_from_host_home() {
     }
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
+    mkdir -p ~/.vimtmp
     [[ -e ~/projects ]] || mkdir ~/projects
 
 }
