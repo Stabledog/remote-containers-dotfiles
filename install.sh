@@ -27,6 +27,11 @@ die() {
     exit 1
 }
 
+rsync() {
+    command -v rsync &>/dev/null || die "$scriptName depends on rsync, which is not installed in the container"
+    command rsync "$@"
+}
+
 install_from_host_home() {
     # Assuming there's a /host_home share which gives us access to all the host's dotfiles:
     local host_home=/host_home
