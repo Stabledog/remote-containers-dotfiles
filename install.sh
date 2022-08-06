@@ -65,9 +65,30 @@ install_from_host_home() {
 
 }
 
+setup_bashrc_prefix() {
+    [[ -d ${HOME}/bin ]] || return
+    (
+        echo "#!/bin/bash" $'\n' "echo ok" $'\n' > ~/bin/binfoo_path_test.sh
+        command chmod +x ~/bin/binfoo_path_test.sh || die "Can't test ~/bin PATH presence:1"
+        builtin source ~/.bashrc
+        binfoo_path_test.sh &>/dev/null
+        result=$?
+        rm ~/bin/binfoo_path_test.sh &>/dev/null
+        [[ $result == 0 ]] || {
+            # ~/bin exists but is not on the PATH:
+            tmpd=$(mktemp -d) || die "Can't fix ~/bin PATH presence: 2"
+            echo 'PATH=${HOME}/bin:${PATH}  # Added by remote-containers-dotfiles/install.sh' > ${tmpd}/.bashrc || die 10992
+            cat ~/.bashrc >> ${tmpd}/.bashrc || die 10993
+            mv ${tmpd}/.bashrc ~/.bashrc || die "Failed fixing ~/bin PATH presence"
+            echo 'We patched ~/.bashrc to add ~/bin to the path'
+        }
+    )
+}
+
 main() {
     [[ -d /host_home ]] && {
         install_from_host_home "$@"
+        setup_bashrc_prefix "$@"
     }
 }
 
