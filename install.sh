@@ -2,7 +2,10 @@
 # Install dotfiles in a devcontainer.
 # Preferred approach is to have the HOME host environment share readonly with the container as /host_home
 # Then install_from_host_home() can copy and filter as needed.
-
+#
+#  WARNING: if you're modifying the content of this repo INSIDE a container, don't rebuild the
+#      container until it's committed and pushed!
+#
 #  SETUP:
 #    - specify /host_home share in devcontainer.json:
 #       "mounts": [ "source=${localEnv:HOME},target=/host_home,type=bind,readonly" ]
@@ -84,11 +87,11 @@ install_from_host_home() {
         [[ -e ${host_home}/${file_name} ]] || continue
         cp ${host_home}/${file_name} ~/${file_name}
     done
-    if not rcdFlagAll protectBashrc; then
+    rcdFlagAll protectBashrc || {
         grep -Eq "^source ~/bin/bashrc-common" ~/.bashrc || {
             echo "source ~/bin/bashrc-common # Added by $scriptName" >> ~/.bashrc
         }
-    fi
+    }
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
     mkdir -p ~/.vimtmp
