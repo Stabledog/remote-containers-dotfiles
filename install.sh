@@ -65,7 +65,6 @@ rcdFlagAny() {
 }
 
 taskrc_setup() {
-    set -x
     [[ -x $HOME/.local/bin/taskrc-kit/setup.sh ]] && {
         (
             xdir=$(mktemp -d) \
