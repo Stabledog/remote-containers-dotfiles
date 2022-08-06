@@ -13,6 +13,7 @@
 #       "remote.containers.dotfiles.targetPath": "~/remote-containers-dotfiles",
 #
 
+scriptName="remote-containers-dotfiles/install.sh"
 
 cout() {
     sed 's%^%[remote-containers-dotfiles/install.sh]:%'
@@ -55,8 +56,8 @@ install_from_host_home() {
         [[ -e ${host_home}/${file_name} ]] || continue
         cp ${host_home}/${file_name} ~/${file_name}
     done
-    grep -Eq "^source ~/bashrc-common" ~/.bashrc || {
-        echo "source ~/bin/bashrc-common # Added by $scriptId" >> ~/.bashrc
+    grep -Eq "^source ~/bin/bashrc-common" ~/.bashrc || {
+        echo "source ~/bin/bashrc-common # Added by $scriptName" >> ~/.bashrc
     }
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
