@@ -64,6 +64,18 @@ rcdFlagAny() {
     false
 }
 
+taskrc_setup() {
+    set -x
+    [[ -x $HOME/.local/bin/taskrc-kit/setup.sh ]] && {
+        (
+            xdir=$(mktemp -d) \
+            && cd $xdir \
+            && cp -r $HOME/.local/bin/taskrc-kit ./
+            && ./setup.sh
+        )
+    }
+}
+
 install_from_host_home() {
     # Assuming there's a /host_home share which gives us access to all the host's dotfiles:
     local host_home=/host_home
@@ -72,7 +84,7 @@ install_from_host_home() {
     [[ -d $host_home/remote-containers-dotfiles ]] && {
         ( cd ~/remote-containers-dotfiles && git remote add host_home ${host_home}/remote-containers-dotfiles && git fetch host_home )
     }
-    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .ssh .vim bb-cert; do
+    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .local/bin/taskrc-kit .ssh .vim bb-cert; do
         (
             [[ -e ${host_home}/${dir_name} ]] || exit 0
             [[ -d $dir_name ]] || {
@@ -87,6 +99,7 @@ install_from_host_home() {
         [[ -e ${host_home}/${file_name} ]] || continue
         cp ${host_home}/${file_name} ~/${file_name}
     done
+    taskrc_setup
     rcdFlagAll protectBashrc || {
         grep -Eq "^source ~/bin/bashrc-common" ~/.bashrc || {
             echo "source ~/bin/bashrc-common # Added by $scriptName" >> ~/.bashrc
