@@ -70,9 +70,10 @@ taskrc_setup() {
         (
             xdir=$(mktemp -d) \
             && cd $xdir \
-            && cp -r $HOME/.local/bin/taskrc-kit ./
-            && ./setup.sh
-        ) || die "Failed in taskrc_setup()
+            && cp -r $HOME/.local/bin/taskrc-kit/ ./ \
+            && taskrc-kit/setup.sh \
+
+        ) || die "Failed in taskrc_setup()"
     }
 }
 
