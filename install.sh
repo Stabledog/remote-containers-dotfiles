@@ -72,7 +72,7 @@ taskrc_setup() {
             && cd $xdir \
             && cp -r $HOME/.local/bin/taskrc-kit ./
             && ./setup.sh
-        )
+        ) || die "Failed in taskrc_setup()
     }
 }
 
