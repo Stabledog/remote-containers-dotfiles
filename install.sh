@@ -12,6 +12,12 @@
 #       "remote.containers.dotfiles.repository": "https://github.com/Stabledog/remote-containers-dotfiles.git",
 #       "remote.containers.dotfiles.targetPath": "~/remote-containers-dotfiles",
 #
+# TUNING:
+#   - If the container environment has RCD_FLAGS defined, it will be a colon-delimited
+#     string like "RCD_FLAGS=FLAG_A:FLAG_B", etc. which condition install behavior
+#
+#       protectBashrc:  Don't modify .bashrc
+#
 
 scriptName="remote-containers-dotfiles/install.sh"
 
@@ -31,6 +37,28 @@ die() {
 rsync() {
     command -v rsync &>/dev/null || die "$scriptName depends on rsync, which is not installed in the container"
     command rsync "$@"
+}
+
+rcdFlagAll() {
+    # Test a combination of one or more RCD_FLAGS elements.  If RCD_FLAGS=FOO2:FOO3, and
+    # you call "rcdFlag FOO2", it will succeed.  "rcdFlag FOO1 FOO2" will fail because
+    # FOO1 is not defined.
+    for flagName; do
+        [[ -z $RCD_FLAGS ]] && { false; return; }
+        ( IFS=":"; command grep  -Eq "\<$1\>" <<< "${RCD_FLAGS}" ; ) || { false; return; }
+    done
+    true
+}
+
+rcdFlagAny() {
+    # Test any-of-N RCD_FLAGS elements.  If RCD_FLAGS=FOO2:FOO3, and
+    # you call "rcdFlag FOO2", it will succeed.  "rcdFlag FOO1 FOO2" will also succeed because
+    # FOO2 is defined.
+    for flagName; do
+        [[ -z $RCD_FLAGS ]] && { false; return; }
+        ( IFS=":"; command grep  -Eq "\<$1\>" <<< "${RCD_FLAGS}" ; ) || { true; return; }
+    done
+    false
 }
 
 install_from_host_home() {
@@ -56,9 +84,11 @@ install_from_host_home() {
         [[ -e ${host_home}/${file_name} ]] || continue
         cp ${host_home}/${file_name} ~/${file_name}
     done
-    grep -Eq "^source ~/bin/bashrc-common" ~/.bashrc || {
-        echo "source ~/bin/bashrc-common # Added by $scriptName" >> ~/.bashrc
-    }
+    if not rcdFlagAll protectBashrc; then
+        grep -Eq "^source ~/bin/bashrc-common" ~/.bashrc || {
+            echo "source ~/bin/bashrc-common # Added by $scriptName" >> ~/.bashrc
+        }
+    fi
     ln -sf bin/inputrc .inputrc
     ln -sf my-home/gitconfig .gitconfig
     mkdir -p ~/.vimtmp
@@ -68,6 +98,7 @@ install_from_host_home() {
 
 setup_bashrc_prefix() {
     [[ -d ${HOME}/bin ]] || return
+    rcdFlagAll protectBashrc && return
     (
         echo "#!/bin/bash" $'\n' "echo ok" $'\n' > ~/bin/binfoo_path_test.sh
         command chmod +x ~/bin/binfoo_path_test.sh || die "Can't test ~/bin PATH presence:1"
