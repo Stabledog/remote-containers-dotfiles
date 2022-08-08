@@ -84,7 +84,7 @@ install_from_host_home() {
     [[ -d $host_home/remote-containers-dotfiles ]] && {
         ( cd ~/remote-containers-dotfiles && git remote add host_home ${host_home}/remote-containers-dotfiles && git fetch host_home )
     }
-    for dir_name in bin .local/bin/cdpp .local/bin/localhist .local/bin/ps1-foo my-home .local/bin/taskrc-kit .ssh .vim bb-cert; do
+    for dir_name in bin my-home .ssh .vim bb-cert; do
         (
             [[ -e ${host_home}/${dir_name} ]] || exit 0
             [[ -d $dir_name ]] || {
@@ -94,6 +94,11 @@ install_from_host_home() {
             chmod u+w *
             rsync -av ${host_home}/${dir_name}/ . || die "Can't rsync ${dir_name}"
         )
+    done
+    for sanekit in cdpp localhist ps1-foo taskrc-kit; do 
+        [[ -d ${host_home}/.local/bin/${sanekit} ]] && {
+            ${host_home}/.local/bin/${sanekit}/setup.sh
+        }
     done
     for file_name in .cdpprc .localhistrc; do
         [[ -e ${host_home}/${file_name} ]] || continue
