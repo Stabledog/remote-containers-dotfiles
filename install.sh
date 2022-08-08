@@ -84,7 +84,7 @@ install_from_host_home() {
     [[ -d $host_home/remote-containers-dotfiles ]] && {
         ( cd ~/remote-containers-dotfiles && git remote add host_home ${host_home}/remote-containers-dotfiles && git fetch host_home )
     }
-    for dir_name in bin .local/bin/cdpp .local/bin/localhist my-home .local/bin/taskrc-kit .ssh .vim bb-cert; do
+    for dir_name in bin .local/bin/cdpp .local/bin/localhist .local/bin/ps1-foo my-home .local/bin/taskrc-kit .ssh .vim bb-cert; do
         (
             [[ -e ${host_home}/${dir_name} ]] || exit 0
             [[ -d $dir_name ]] || {
